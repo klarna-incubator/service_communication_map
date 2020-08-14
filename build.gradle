@@ -3,17 +3,34 @@ plugins {
     id 'java'
 	id 'eclipse'
     id 'application'
+    id 'com.vaadin' version '0.8.0'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
 
 repositories {
     jcenter()
 }
 
+ext {
+    set('vaadinVersion', "14.3.0")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+    }
+}
+
 dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'org.jgrapht:jgrapht-core:1.5.0'
     implementation 'org.jgrapht:jgrapht-io:1.5.0'
+    implementation 'com.vaadin:vaadin-spring-boot-starter'
 
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
     testImplementation 'junit:junit:4.13'
 }
 
