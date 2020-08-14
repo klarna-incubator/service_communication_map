@@ -7,20 +7,18 @@ import java.util.UUID;
 
 public class SimpleLogEntry implements LogEntry{
 	private String serviceName;
-	
-	@Deprecated
-	private final String _raw;
-	
+	private UUID correlationID;
+	private Instant timestamp;	
 	
 	public SimpleLogEntry(String[] data) {
 		this.serviceName = data[0];
-		this._raw = data[1];
+		this.correlationID = UUID.fromString(data[1]);
+		this.timestamp = Instant.parse(data[2]);
 	}
 	
 	@Override
 	public UUID getCorrelationID() {
-		// TODO Auto-generated method stub
-		return null;
+		return correlationID;
 	}
 
 	@Override
@@ -30,12 +28,11 @@ public class SimpleLogEntry implements LogEntry{
 
 	@Override
 	public Instant getTimestamp() {
-		// TODO Auto-generated method stub
-		return null;
+		return timestamp;
 	}
 	
 	public String toString() {
-		return format("# %s ## %s", this.serviceName, this._raw);
+		return format("# %s ## %s ## %s", this.serviceName, this.correlationID, this.timestamp);
 		
 	}
 
