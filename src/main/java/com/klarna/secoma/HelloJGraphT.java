@@ -18,6 +18,10 @@
 package com.klarna.secoma;
 
 
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.parse.Parser;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.nio.*;
@@ -143,7 +147,15 @@ public final class HelloJGraphT
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(hrefGraph, writer);
-        System.out.println(writer.toString());
+        String dotRepresentation = writer.toString();
+        System.out.println(dotRepresentation);
+
+        try {
+            MutableGraph g = new Parser().read(dotRepresentation);
+            Graphviz.fromGraph(g).width(700).render(Format.SVG).toFile(new File("examples/graph.svg"));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error while processing DOT representation");
+        }
     }
 
     /**
