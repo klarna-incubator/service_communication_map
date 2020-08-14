@@ -2,8 +2,8 @@ package com.klarna.secoma;
 
 import static java.lang.String.format;
 
-import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -50,8 +50,8 @@ public class LogNode {
 			this.exitTimestamp = time;
 	}
 
-	public Duration getDuration() {
-		return Duration.between(entryTimestamp, exitTimestamp);
+	public long getDuration() {
+		return ChronoUnit.MILLIS.between(entryTimestamp, exitTimestamp);
 	}
 
 	public void addTimestamp(Instant timestamp) {
