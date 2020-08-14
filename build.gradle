@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'org.jgrapht:jgrapht-core:1.5.0'
+    implementation 'org.jgrapht:jgrapht-io:1.5.0'
 
     testImplementation 'junit:junit:4.13'
 }

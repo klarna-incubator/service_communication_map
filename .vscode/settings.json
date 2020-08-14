@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/.classpath": true
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
+}

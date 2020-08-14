@@ -5,8 +5,6 @@ package com.klarna.secoma;
 
 import org.junit.Test;
 
-import com.klarna.secoma.App;
-
 import static org.junit.Assert.*;
 
 public class AppTest {
