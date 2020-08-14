@@ -1,46 +1,33 @@
-# Project Name
-> Short blurb about what your project does.
+# SeCoMa
+> Tool for building distributed service communication map
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
 
 
-One to two paragraph statement about your project and what it does.
+Given some id, what services and in which order are involved in processing?
+Logs gives me a list, but what is the data/business flow? It is a graph!
 
-## First steps
+This tool provides insight into your systems interaction by building service communication map.
 
-<details>
- <summary>Installation (for Admins)</summary>
-  
-  Currently, new repositories can be created only by a Klarna Open Source community lead. Please reach out to us if you need assistance.
-  
-  1. Create a new repository by clicking ‘Use this template’ button.
-  
-  2. Make sure your newly created repository is private.
-  
-  3. Enable Dependabot alerts in your candidate repo settings under Security & analysis. You need to enable ‘Allow GitHub to perform read-only analysis of this repository’ first.
-</details>
-
-1. Update `README.md` and `CHANGELOG.md`.
-
-2. Optionally, change `.github/CONTRIBUTING.md`.
-
-3. Do *not* edit `LICENSE`, `.github/CODE_OF_CONDUCT.md`, and `.github/SECURITY.md`.
+While there are many great tools for distributed tracing, they are bigger in scope and harder to integrate.
+This project aims at focused, ad-hoc usage without changing other services or long procurement process.
 
 ## Usage example
 
-A few motivating and useful examples of how your project can be used. Spice this up with code blocks and potentially more screenshots.
-
-_For more examples and usage, please refer to the [Docs](TODO)._
+_TODO_
 
 ## Development setup
 
-Describe how to install all development dependencies and how to run an automated test-suite of some kind. Potentially do this for multiple platforms.
+This project requires :
+* JDK 14
+* Gradle 6.6
+
 
 ```sh
-make install
-npm test
+# run build
+./gradlew build
 ```
 
 ## How to contribute
