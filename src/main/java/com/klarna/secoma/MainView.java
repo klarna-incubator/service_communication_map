@@ -18,6 +18,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.StreamResource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +39,8 @@ public class MainView extends VerticalLayout {
     public MainView() {
         TextField textField = new TextField("Correlation ID");
 
+        Image graphImage = new Image();
+
         Button button = new Button("Search");
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         button.addClickShortcut(Key.ENTER);
@@ -47,21 +51,11 @@ public class MainView extends VerticalLayout {
                 return;
             }
 
-            UI ui = UI.getCurrent();
-            CompletableFuture.supplyAsync(() -> communicationMapService.findCommunicationMap(correlationId))
-                    .thenAccept(streamResource -> {
-                        Image image = (Image) ui.getChildren().filter(component -> component.getClass() == MainView.class)
-                                .findFirst()
-                                .orElseThrow()
-                                .getChildren()
-                                .filter(component -> component.getClass() == Image.class)
-                                .findFirst()
-                                .orElseThrow();
-                        image.setSrc(streamResource);
-                    });
+            StreamResource res = communicationMapService.findCommunicationMap(correlationId);
+            graphImage.setSrc(res);
         });
 
-        Image graphImage = new Image();
+        
 
         VerticalLayout workspace = new VerticalLayout();
         workspace.setAlignItems(Alignment.CENTER);
