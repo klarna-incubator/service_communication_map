@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public final class LogParser {
@@ -38,7 +39,7 @@ public final class LogParser {
 
 						try {
 							Instant instant = Instant.from(dtf.parse(time.replace(DQ, NOTHING)));
-							return (LogEntry) new SimpleLogEntry(name.replace(DQ, NOTHING), instant);
+							return (LogEntry) new SimpleLogEntry(name.replace(DQ, NOTHING), instant, UUID.randomUUID());//TODO extract ID
 						} catch (DateTimeParseException dtpe) {
 							throw new RuntimeException("can't parse " + time, dtpe);
 						}

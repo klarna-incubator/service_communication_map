@@ -6,20 +6,22 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class SimpleLogEntry implements LogEntry{
+
 	private final String serviceName;
 	private final Instant timestamp;
+	private final UUID correlationID;
 	
 	
 	
-	public SimpleLogEntry(String serviceName, Instant timestamp) {
+	public SimpleLogEntry(String serviceName, Instant timestamp, UUID correlationID) {
 		this.serviceName = serviceName;
 		this.timestamp = timestamp;
+		this.correlationID = correlationID;
 	}
 	
 	@Override
 	public UUID getCorrelationID() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.correlationID;
 	}
 
 	@Override
@@ -29,13 +31,11 @@ public class SimpleLogEntry implements LogEntry{
 
 	@Override
 	public Instant getTimestamp() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.timestamp;
 	}
 	
 	public String toString() {
-		return format("# %s ## %s", this.serviceName, this.timestamp);
-		
+		return format("# %s <%s> @ %s", this.serviceName, this.correlationID, this.timestamp);
 	}
 
 }
