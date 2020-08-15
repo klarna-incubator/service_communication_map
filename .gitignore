@@ -293,3 +293,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,osx,eclipse,intellij+all,netbeans,visualstudiocode,java,gradle
 
+node_modules
+package-lock.json
+target
