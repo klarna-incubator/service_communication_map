@@ -13,28 +13,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LogReader {
+public final class LogReader {
 
-	
-	
-	public List<String> getLogs(Path folder){
-		
+	public static Stream<String> streamLogs(Path folder) {
 		List<String> lines = new LinkedList<>();
 		readDataFolder(folder.resolve(folder), lines);
-		
-		
-		return lines;
-	}
-	
-	public Stream<String> streamLogs(Path folder){
-		
-		List<String> lines = new LinkedList<>();
-		readDataFolder(folder.resolve(folder), lines);
-		
-		
 		return lines.stream();
 	}
-	
 
 	private static void readDataFolder(Path path, List<String> data) {
 		System.out.println("\n = " + path.toAbsolutePath());
@@ -74,4 +59,6 @@ public class LogReader {
 				duration.toMinutesPart(), duration.toSecondsPart(), duration.toMillisPart(), duration.toNanosPart()));
 	}
 
+	private LogReader() {
+	}
 }

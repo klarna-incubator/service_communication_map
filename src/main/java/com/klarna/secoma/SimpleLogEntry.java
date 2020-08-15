@@ -6,15 +6,14 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class SimpleLogEntry implements LogEntry{
-	private String serviceName;
-	
-	@Deprecated
-	private final String _raw;
+	private final String serviceName;
+	private final Instant timestamp;
 	
 	
-	public SimpleLogEntry(String[] data) {
-		this.serviceName = data[0];
-		this._raw = data[1];
+	
+	public SimpleLogEntry(String serviceName, Instant timestamp) {
+		this.serviceName = serviceName;
+		this.timestamp = timestamp;
 	}
 	
 	@Override
@@ -35,7 +34,7 @@ public class SimpleLogEntry implements LogEntry{
 	}
 	
 	public String toString() {
-		return format("# %s ## %s", this.serviceName, this._raw);
+		return format("# %s ## %s", this.serviceName, this.timestamp);
 		
 	}
 

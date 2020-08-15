@@ -3,9 +3,12 @@
  */
 package com.klarna.secoma;
 
+import static com.klarna.secoma.LogParser.parse;
+import static com.klarna.secoma.LogReader.streamLogs;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.stream.Stream;
 
 public class App {
 	public String getGreeting() {
@@ -22,13 +25,9 @@ public class App {
 	public static void main(String[] args) {
 		Path workDir = Paths.get(args[0]);
 
-		LogReader reader = new LogReader();
+		Stream<LogEntry> logs = parse(streamLogs(workDir));
 
-		List<String> rawLogs = reader.getLogs(workDir);
-		LogParser parser = new LogParser();
-		List<LogEntry> logs = parser.parse(rawLogs);
-
-		logs.forEach(log -> System.err.println(log));
+		logs.forEach(log -> System.out.println(log));
 
 	}
 
