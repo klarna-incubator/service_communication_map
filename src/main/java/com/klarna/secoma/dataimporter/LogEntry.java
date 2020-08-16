@@ -1,4 +1,4 @@
-package com.klarna.secoma;
+package com.klarna.secoma.dataimporter;
 
 import java.time.Instant;
 import java.util.UUID;

@@ -33,52 +33,50 @@ import java.util.stream.Collectors;
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class MainView extends VerticalLayout {
 
-    @Autowired
-    CommunicationMapService communicationMapService;
+	@Autowired
+	CommunicationMapService communicationMapService;
 
-    public MainView() {
-        TextField textField = new TextField("Correlation ID");
+	public MainView() {
+		TextField textField = new TextField("Correlation ID");
 
-        Image graphImage = new Image();
+		Image graphImage = new Image();
 
-        Button button = new Button("Search");
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        button.addClickShortcut(Key.ENTER);
-        button.addClickListener(event -> {
-            String correlationId = textField.getValue();
-            if (StringUtils.isEmpty(correlationId)) {
-                Notification.show("Empty correlation ID");
-                return;
-            }
+		Button button = new Button("Search");
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		button.addClickShortcut(Key.ENTER);
+		button.addClickListener(event -> {
+			String correlationId = textField.getValue();
+			if (StringUtils.isEmpty(correlationId)) {
+				Notification.show("Empty correlation ID");
+				return;
+			}
 
-            StreamResource res = communicationMapService.findCommunicationMap(correlationId);
-            graphImage.setSrc(res);
-        });
+			StreamResource res = communicationMapService.findCommunicationMap(correlationId);
+			graphImage.setSrc(res);
+		});
 
-        
+		VerticalLayout workspace = new VerticalLayout();
+		workspace.setAlignItems(Alignment.CENTER);
+		workspace.setSizeFull();
+		workspace.add(textField, button, graphImage);
 
-        VerticalLayout workspace = new VerticalLayout();
-        workspace.setAlignItems(Alignment.CENTER);
-        workspace.setSizeFull();
-        workspace.add(textField, button, graphImage);
+		setSizeFull();
+		setMargin(false);
+		setSpacing(false);
+		setPadding(false);
+		add(createHeader(), workspace);
+	}
 
-        setSizeFull();
-        setMargin(false);
-        setSpacing(false);
-        setPadding(false);
-        add(createHeader(), workspace);
-    }
+	private Component createHeader() {
+		Icon drawer = VaadinIcon.MENU.create();
+		Span title = new Span("Service Communication Map Viewer");
+		Icon help = VaadinIcon.QUESTION_CIRCLE.create();
+		HorizontalLayout header = new HorizontalLayout(drawer, title, help);
+		header.expand(title);
+		header.setPadding(true);
+		header.setWidth("100%");
 
-    private Component createHeader() {
-        Icon drawer = VaadinIcon.MENU.create();
-        Span title = new Span("Service Communication Map Viewer");
-        Icon help = VaadinIcon.QUESTION_CIRCLE.create();
-        HorizontalLayout header = new HorizontalLayout(drawer, title, help);
-        header.expand(title);
-        header.setPadding(true);
-        header.setWidth("100%");
-
-        return header;
-    }
+			return header;
+	}
 
 }

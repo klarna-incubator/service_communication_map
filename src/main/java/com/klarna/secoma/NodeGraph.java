@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +23,9 @@ import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.DefaultAttribute;
 import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.dot.DOTExporter;
+
+import com.klarna.secoma.dataimporter.LogEntry;
+import com.klarna.secoma.dataimporter.SimpleLogEntry;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -52,7 +56,7 @@ public class NodeGraph {
 		return nodes;
 	}
 
-	private static ArrayList<LogEntry> searchForCorrelationId(ArrayList<LogEntry> entries, UUID correlationId) {
+	private static ArrayList<LogEntry> searchForCorrelationId(List<LogEntry> entries, UUID correlationId) {
 		ArrayList<LogEntry> nodes = new ArrayList<LogEntry>();
 		for (LogEntry e : entries) {
 			if (e.getCorrelationID().equals(correlationId)) {
@@ -115,7 +119,7 @@ public class NodeGraph {
 		}
 	}
 
-	private static Graph<LogNode, DefaultEdge> stubGetGraph() {
+	private static List<LogEntry> stubGetGraph() {
 		ArrayList<LogEntry> entries = new ArrayList<LogEntry>();
 		UUID corrID = UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57");
 		entries.add(new SimpleLogEntry("a", Instant.parse("2018-11-30T18:35:24.00Z"), corrID));
@@ -129,20 +133,20 @@ public class NodeGraph {
 		entries.add(new SimpleLogEntry("d", Instant.parse("2018-11-30T18:43:24.00Z"), corrID));
 		entries.add(new SimpleLogEntry("d", Instant.parse("2018-11-30T18:44:24.00Z"), corrID));
 		entries.add(new SimpleLogEntry("q", Instant.parse("2018-11-30T18:44:24.00Z"), UUID.randomUUID()));
+		return entries;
+	}
 
-		ArrayList<LogEntry> filteredEntries = searchForCorrelationId(entries,
-				UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57"));
+	private static Graph<LogNode, DefaultEdge> getGraph(List<LogEntry> logs, UUID uuid) {
+		ArrayList<LogEntry> filteredEntries = searchForCorrelationId(logs, uuid);
 
 		ArrayList<LogNode> nodes = convertLogEntryToLogNode(filteredEntries);
 		printArrayListLogNodes(nodes);
 
-		Graph<LogNode, DefaultEdge> logNodeGraph = createLogNodeGraph(nodes);
-		return logNodeGraph;
+		return  createLogNodeGraph(nodes);
 	}
 
-	public static InputStream getGraphImage() {
-		Graph<LogNode, DefaultEdge> logNodeGraph = stubGetGraph();
-
+	public static InputStream getGraphImage(List<LogEntry> logs, UUID uuid) {
+		Graph<LogNode, DefaultEdge> logNodeGraph =  getGraph(logs, uuid);
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(graphRenderer(logNodeGraph).toImage(), "png", bos);
@@ -154,7 +158,7 @@ public class NodeGraph {
 	}
 
 	public static void main(String[] args) {
-		Graph<LogNode, DefaultEdge> logNodeGraph = stubGetGraph();
+		Graph<LogNode, DefaultEdge> logNodeGraph =  getGraph(stubGetGraph(), UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57"));
 
 		try {
 			graphRenderer(logNodeGraph).toFile(new File("examples/graph.svg"));
