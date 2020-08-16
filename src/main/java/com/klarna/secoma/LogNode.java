@@ -7,6 +7,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.klarna.secoma.dataimporter.LogEntry;
+
 public class LogNode {
 	private String serviceName;
 	private UUID correlationID;
