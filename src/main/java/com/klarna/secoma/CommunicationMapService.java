@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.klarna.secoma.config.Configuration;
 import com.klarna.secoma.dataimporter.LogEntry;
+import com.klarna.secoma.graph.NodeGraph;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 
@@ -26,7 +27,7 @@ public class CommunicationMapService {
 	Configuration config;
 
 	public StreamResource findCommunicationMap(String correlationId) {
-		UUID id = UUID.fromString(correlationId);
+		UUID id = correlationId != null ? UUID.fromString(correlationId) : null;
 		return new StreamResource("foo.png", new InputStreamFactory() {
 			private static final long serialVersionUID = 9031433761422193929L;
 

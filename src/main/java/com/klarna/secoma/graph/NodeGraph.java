@@ -1,4 +1,4 @@
-package com.klarna.secoma;
+package com.klarna.secoma.graph;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -25,7 +26,6 @@ import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.dot.DOTExporter;
 
 import com.klarna.secoma.dataimporter.LogEntry;
-import com.klarna.secoma.dataimporter.SimpleLogEntry;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -35,46 +35,34 @@ import guru.nidi.graphviz.parse.Parser;
 
 public class NodeGraph {
 
-	private static LogNode searchLogNodes(ArrayList<LogNode> nodes, String serviceName, UUID correlationId) {
-		for (LogNode n : nodes) {
-			if (n.getCorrelationID().equals(correlationId) && n.getServiceName().equals(serviceName))
-				return n;
-		}
-		return null;
+	private static LogNode searchLogNodes(List<LogNode> nodes, String serviceName, UUID correlationId) {
+		return nodes.stream()
+				.filter(n -> n.getCorrelationID().equals(correlationId) && n.getServiceName().equals(serviceName))
+				.findAny().orElse(null);
 	}
 
-	private static ArrayList<LogNode> convertLogEntryToLogNode(ArrayList<LogEntry> entries) {
-		ArrayList<LogNode> nodes = new ArrayList<LogNode>();
+	private static List<LogNode> convertLogEntryToLogNode(List<LogEntry> entries) {
+		List<LogNode> nodes = new ArrayList<LogNode>();
 		for (LogEntry s : entries) {
-			LogNode result = searchLogNodes(nodes, s.getServiceName(), s.getCorrelationID());
+			LogNode result = searchLogNodes(nodes, s.serviceName(), s.correlationID());
 			if (result == null) {
 				result = new LogNode(s);
 				nodes.add(result);
 			}
-			result.addTimestamp(s.getTimestamp());
+			result.addTimestamp(s.timestamp());
 		}
 		return nodes;
 	}
 
-	private static ArrayList<LogEntry> searchForCorrelationId(List<LogEntry> entries, UUID correlationId) {
-		ArrayList<LogEntry> nodes = new ArrayList<LogEntry>();
-		for (LogEntry e : entries) {
-			if (e.getCorrelationID().equals(correlationId)) {
-				nodes.add(e);
-			}
-		}
-		return nodes;
+	private static List<LogEntry> searchForCorrelationId(List<LogEntry> entries, UUID correlationId) {
+		return entries.stream().filter(e -> e.correlationID().equals(correlationId)).collect(Collectors.toList());
 	}
 
-	public static void printArrayListLogNodes(ArrayList<LogNode> nodes) {
-		String listString = "";
-		for (LogNode n : nodes) {
-			listString += n.toString() + "\n";
-		}
-		System.out.println(listString);
+	public static void printListLogNodes(List<LogNode> nodes) {
+		nodes.forEach(System.out::println);
 	}
 
-	private static Graph<LogNode, DefaultEdge> createLogNodeGraph(ArrayList<LogNode> nodes) {
+	private static Graph<LogNode, DefaultEdge> createLogNodeGraph(List<LogNode> nodes) {
 		Graph<LogNode, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
 
 		for (LogNode n : nodes) {
@@ -113,34 +101,34 @@ public class NodeGraph {
 
 		try {
 			MutableGraph g = new Parser().read(dotRepresentation);
-			return Graphviz.fromGraph(g).width(700).render(Format.SVG);
+			return Graphviz.fromGraph(g).width(1400).render(Format.SVG);
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Error while processing DOT representation");
 		}
 	}
 
 	private static List<LogEntry> stubGetGraph() {
-		ArrayList<LogEntry> entries = new ArrayList<LogEntry>();
+		List<LogEntry> entries = new ArrayList<LogEntry>();
 		UUID corrID = UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57");
-		entries.add(new SimpleLogEntry("a", Instant.parse("2018-11-30T18:35:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("a", Instant.parse("2018-11-30T18:37:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("a", Instant.parse("2018-11-30T18:51:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("b", Instant.parse("2018-11-30T18:39:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("b", Instant.parse("2018-11-30T18:50:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("c", Instant.parse("2018-11-30T18:39:27.00Z"), corrID));
-		entries.add(new SimpleLogEntry("c", Instant.parse("2018-11-30T18:41:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("d", Instant.parse("2018-11-30T18:42:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("d", Instant.parse("2018-11-30T18:43:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("d", Instant.parse("2018-11-30T18:44:24.00Z"), corrID));
-		entries.add(new SimpleLogEntry("q", Instant.parse("2018-11-30T18:44:24.00Z"), UUID.randomUUID()));
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:35:24.00Z"), corrID));
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:37:24.00Z"), corrID));
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:51:24.00Z"), corrID));
+		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:39:24.00Z"), corrID));
+		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:50:24.00Z"), corrID));
+		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:39:27.00Z"), corrID));
+		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:41:24.00Z"), corrID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:42:24.00Z"), corrID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:43:24.00Z"), corrID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:44:24.00Z"), corrID));
+		entries.add(new LogEntry("q", Instant.parse("2018-11-30T18:44:24.00Z"), UUID.randomUUID()));
 		return entries;
 	}
 
 	private static Graph<LogNode, DefaultEdge> getGraph(List<LogEntry> logs, UUID uuid) {
-		ArrayList<LogEntry> filteredEntries = searchForCorrelationId(logs, uuid);
+		List<LogEntry> filteredEntries = uuid != null ? searchForCorrelationId(logs, uuid) : logs;
 
-		ArrayList<LogNode> nodes = convertLogEntryToLogNode(filteredEntries);
-		printArrayListLogNodes(nodes);
+		List<LogNode> nodes = convertLogEntryToLogNode(filteredEntries);
+		printListLogNodes(nodes);
 
 		return  createLogNodeGraph(nodes);
 	}

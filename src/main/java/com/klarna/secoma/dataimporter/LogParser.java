@@ -1,17 +1,15 @@
 package com.klarna.secoma.dataimporter;
 
+import static java.lang.String.format;
+
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
-import static java.lang.String.format;
 
 public final class LogParser {
 
@@ -42,7 +40,6 @@ public final class LogParser {
 	 */
 	public static Stream<LogEntry> parse(Stream<String> rows) {
 		return rows.map(line -> {
-try {
 			String[] data = line.split(",", 3);
 			String name = data[0];
 			String time = data[1];
@@ -61,16 +58,10 @@ try {
 					System.err.println("Can't find correlation id matcher for " + raw);
 					return null;
 				}
-				return (LogEntry) new SimpleLogEntry(name.replace(DQ, NOTHING), instant, UUID.fromString(id));
+				return new LogEntry(name.replace(DQ, NOTHING), instant, UUID.fromString(id));
 			} catch (DateTimeParseException dtpe) {
 				throw new RuntimeException("can't parse " + time, dtpe);
 			}
-}catch(Exception e) {
-	System.err.println(line);
-	String[] split = line.split(",", 3);
-	System.err.println(split);
-}
-return null;
 		}).filter(Objects::nonNull);
 	}
 
