@@ -1,4 +1,4 @@
-package com.klarna.secoma;
+package com.klarna.secoma.graph;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.klarna.secoma.config.Configuration;
 import com.klarna.secoma.dataimporter.LogEntry;
+import com.klarna.secoma.graph.NodeGraph;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 

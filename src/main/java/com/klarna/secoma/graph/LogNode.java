@@ -1,4 +1,4 @@
-package com.klarna.secoma;
+package com.klarna.secoma.graph;
 
 import static java.lang.String.format;
 
