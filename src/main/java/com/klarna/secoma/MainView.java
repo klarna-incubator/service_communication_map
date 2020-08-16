@@ -1,9 +1,10 @@
 package com.klarna.secoma;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -15,23 +16,16 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.server.StreamResource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Route("")
 @PWA(name = "Project Base for Vaadin", shortName = "Project Base")
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class MainView extends VerticalLayout {
+
+	private static final long serialVersionUID = 4415593990886566385L;
 
 	@Autowired
 	CommunicationMapService communicationMapService;
@@ -45,14 +39,9 @@ public class MainView extends VerticalLayout {
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.addClickShortcut(Key.ENTER);
 		button.addClickListener(event -> {
-			String correlationId = textField.getValue();
-			if (StringUtils.isEmpty(correlationId)) {
-				Notification.show("Empty correlation ID");
-				return;
-			}
-
-			StreamResource res = communicationMapService.findCommunicationMap(correlationId);
-			graphImage.setSrc(res);
+			String correlationId = StringUtils.stripToNull(textField.getValue());
+			Notification.show(correlationId == null ? "Empty correlation ID, rendering all logs": "Rendering for " + correlationId);
+			graphImage.setSrc(communicationMapService.findCommunicationMap(correlationId));
 		});
 
 		VerticalLayout workspace = new VerticalLayout();

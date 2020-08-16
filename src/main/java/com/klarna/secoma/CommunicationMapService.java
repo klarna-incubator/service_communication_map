@@ -26,7 +26,7 @@ public class CommunicationMapService {
 	Configuration config;
 
 	public StreamResource findCommunicationMap(String correlationId) {
-		UUID id = UUID.fromString(correlationId);
+		UUID id = correlationId != null ? UUID.fromString(correlationId) : null;
 		return new StreamResource("foo.png", new InputStreamFactory() {
 			private static final long serialVersionUID = 9031433761422193929L;
 

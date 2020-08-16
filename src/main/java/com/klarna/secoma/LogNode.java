@@ -17,8 +17,8 @@ public class LogNode {
 	private Instant exitTimestamp;	
 	
 	public LogNode(LogEntry s) {
-		this.serviceName = s.getServiceName();
-		this.correlationID = s.getCorrelationID();
+		this.serviceName = s.serviceName();
+		this.correlationID = s.correlationID();
 		this.timestamps = new ArrayList<>();
 	}
 	
