@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.imageio.ImageIO;
-
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -37,8 +35,12 @@ public class NodeGraph {
 
 	private static LogNode searchLogNodes(List<LogNode> nodes, String serviceName, UUID correlationId) {
 		return nodes.stream()
-				.filter(n -> n.getCorrelationID().equals(correlationId) && n.getServiceName().equals(serviceName))
-				.findAny().orElse(null);
+					.filter(n -> n	.getCorrelationID()
+									.equals(correlationId)
+							&& n.getServiceName()
+								.equals(serviceName))
+					.findAny()
+					.orElse(null);
 	}
 
 	private static List<LogNode> convertLogEntryToLogNode(List<LogEntry> entries) {
@@ -55,7 +57,10 @@ public class NodeGraph {
 	}
 
 	private static List<LogEntry> searchForCorrelationId(List<LogEntry> entries, UUID correlationId) {
-		return entries.stream().filter(e -> e.correlationID().equals(correlationId)).collect(Collectors.toList());
+		return entries	.stream()
+						.filter(e -> e	.correlationID()
+										.equals(correlationId))
+						.collect(Collectors.toList());
 	}
 
 	public static void printListLogNodes(List<LogNode> nodes) {
@@ -72,8 +77,10 @@ public class NodeGraph {
 		for (LogNode vertix : nodes) {
 			LogNode parent = null;
 			for (LogNode n : nodes) {
-				if (vertix.getDuration() < n.getDuration() && vertix.getEntryTimestamp().isAfter(n.getEntryTimestamp())
-						&& vertix.getExitTimestamp().isBefore(n.getExitTimestamp())) {
+				if (vertix.getDuration() < n.getDuration() && vertix.getEntryTimestamp()
+																	.isAfter(n.getEntryTimestamp())
+						&& vertix	.getExitTimestamp()
+									.isBefore(n.getExitTimestamp())) {
 					if (parent == null || n.getDuration() < parent.getDuration())
 						parent = n;
 				}
@@ -92,7 +99,7 @@ public class NodeGraph {
 		DOTExporter<LogNode, DefaultEdge> exporter = new DOTExporter<>(LogNode::getServiceName);
 		exporter.setVertexAttributeProvider((v) -> {
 			Map<String, Attribute> map = new LinkedHashMap<>();
-			map.put("label", DefaultAttribute.createAttribute(v.toString()));
+			map.put("label", DefaultAttribute.createAttribute(v.getServiceName()));
 			return map;
 		});
 		Writer writer = new StringWriter();
@@ -101,7 +108,8 @@ public class NodeGraph {
 
 		try {
 			MutableGraph g = new Parser().read(dotRepresentation);
-			return Graphviz.fromGraph(g).width(1400).render(Format.SVG);
+			return Graphviz	.fromGraph(g)
+							.render(Format.SVG);
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Error while processing DOT representation");
 		}
@@ -130,14 +138,14 @@ public class NodeGraph {
 		List<LogNode> nodes = convertLogEntryToLogNode(filteredEntries);
 		printListLogNodes(nodes);
 
-		return  createLogNodeGraph(nodes);
+		return createLogNodeGraph(nodes);
 	}
 
 	public static InputStream getGraphImage(List<LogEntry> logs, UUID uuid) {
-		Graph<LogNode, DefaultEdge> logNodeGraph =  getGraph(logs, uuid);
+		Graph<LogNode, DefaultEdge> logNodeGraph = getGraph(logs, uuid);
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ImageIO.write(graphRenderer(logNodeGraph).toImage(), "png", bos);
+			graphRenderer(logNodeGraph).toOutputStream(bos);
 			return new ByteArrayInputStream(bos.toByteArray());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -146,7 +154,8 @@ public class NodeGraph {
 	}
 
 	public static void main(String[] args) {
-		Graph<LogNode, DefaultEdge> logNodeGraph =  getGraph(stubGetGraph(), UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57"));
+		Graph<LogNode, DefaultEdge> logNodeGraph = getGraph(stubGetGraph(),
+				UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57"));
 
 		try {
 			graphRenderer(logNodeGraph).toFile(new File("examples/graph.svg"));

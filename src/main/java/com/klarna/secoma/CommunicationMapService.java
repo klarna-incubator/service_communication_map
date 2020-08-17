@@ -28,7 +28,7 @@ public class CommunicationMapService {
 
 	public StreamResource findCommunicationMap(String correlationId) {
 		UUID id = correlationId != null ? UUID.fromString(correlationId) : null;
-		return new StreamResource("foo.png", new InputStreamFactory() {
+		StreamResource sr = new StreamResource("foo.svg", new InputStreamFactory() {
 			private static final long serialVersionUID = 9031433761422193929L;
 
 			@Override
@@ -36,10 +36,12 @@ public class CommunicationMapService {
 				return NodeGraph.getGraphImage(loadData(config.getLogsLocation()), id);
 			}
 		});
+		sr.setContentType("image/svg+xml");
+		return sr;
 	}
 
 	private static List<LogEntry> loadData(String path) {
-		Path workDir = Paths.get(path);	
+		Path workDir = Paths.get(path);
 		Stream<LogEntry> logs = parse(streamLogs(workDir));
 		return logs.collect(Collectors.toList());
 	}
