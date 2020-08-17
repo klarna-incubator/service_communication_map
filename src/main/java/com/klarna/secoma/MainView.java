@@ -8,7 +8,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,6 +15,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 
@@ -31,23 +31,28 @@ public class MainView extends VerticalLayout {
 	CommunicationMapService communicationMapService;
 
 	public MainView() {
+		VerticalLayout workspace = new VerticalLayout();
 		TextField textField = new TextField("Correlation ID");
-
-		Image graphImage = new Image();
+		WrapperComponent wrapper = new WrapperComponent();
 
 		Button button = new Button("Search");
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.addClickShortcut(Key.ENTER);
 		button.addClickListener(event -> {
 			String correlationId = StringUtils.stripToNull(textField.getValue());
-			Notification.show(correlationId == null ? "Empty correlation ID, rendering all logs": "Rendering for " + correlationId);
-			graphImage.setSrc(communicationMapService.findCommunicationMap(correlationId));
+			Notification.show(correlationId == null ? "Empty correlation ID, rendering all logs"
+					: "Rendering for " + correlationId);
+			Element image = new Element("object");
+			image.setAttribute("type", "image/svg+xml");
+			image	.getStyle()
+					.set("display", "block");
+			image.setAttribute("data", communicationMapService.findCommunicationMap(correlationId));
+			wrapper.add(image);
 		});
 
-		VerticalLayout workspace = new VerticalLayout();
 		workspace.setAlignItems(Alignment.CENTER);
 		workspace.setSizeFull();
-		workspace.add(textField, button, graphImage);
+		workspace.add(textField, button, wrapper);
 
 		setSizeFull();
 		setMargin(false);
@@ -65,7 +70,7 @@ public class MainView extends VerticalLayout {
 		header.setPadding(true);
 		header.setWidth("100%");
 
-			return header;
+		return header;
 	}
 
 }
