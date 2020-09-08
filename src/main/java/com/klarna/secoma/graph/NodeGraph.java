@@ -117,18 +117,19 @@ public class NodeGraph {
 
 	private static List<LogEntry> stubGetGraph() {
 		List<LogEntry> entries = new ArrayList<LogEntry>();
-		UUID corrID = UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57");
-		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:35:24.00Z"), corrID));
-		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:37:24.00Z"), corrID));
-		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:51:24.00Z"), corrID));
-		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:39:24.00Z"), corrID));
-		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:50:24.00Z"), corrID));
-		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:39:27.00Z"), corrID));
-		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:41:24.00Z"), corrID));
-		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:42:24.00Z"), corrID));
-		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:43:24.00Z"), corrID));
-		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:44:24.00Z"), corrID));
-		entries.add(new LogEntry("q", Instant.parse("2018-11-30T18:44:24.00Z"), UUID.randomUUID()));
+		UUID correlation_ID = UUID.fromString("e8115e88-1350-4e25-9f64-04a396151e57");
+		Map<String, UUID> ids = Map.of("correlation_id", correlation_ID);
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:35:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:37:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("a", Instant.parse("2018-11-30T18:51:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:39:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("b", Instant.parse("2018-11-30T18:50:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:39:27.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("c", Instant.parse("2018-11-30T18:41:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:42:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:43:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("d", Instant.parse("2018-11-30T18:44:24.00Z"), ids, correlation_ID));
+		entries.add(new LogEntry("q", Instant.parse("2018-11-30T18:44:24.00Z"), ids, UUID.randomUUID()));
 		return entries;
 	}
 
