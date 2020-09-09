@@ -24,7 +24,7 @@ public class LogParserTest {
 	
 	@Test
 	public void canParseSampleData() {
-		String resource = this.getClass().getResource("/single_flow.csv").getPath();
+		String resource = this.getClass().getResource(Paths.get("/single_flow.csv").toString()).getPath();
 		List<LogEntry> logs = loadData(resource);
 		int logLinesCount = 39; // log lines in CSV (not header, not last empty line)
 		assertThat(logs.size(),  is(equalTo(logLinesCount)));
