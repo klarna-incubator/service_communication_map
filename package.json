@@ -45,11 +45,11 @@
       "copy-webpack-plugin": "5.1.1",
       "compression-webpack-plugin": "3.1.0",
       "raw-loader": "3.1.0",
-      "webpack-cli": "3.3.11",
+      "webpack-cli": "4.0.0",
       "webpack": "4.42.0",
       "chokidar": "^3.4.0",
       "webpack-merge": "4.2.2",
-      "webpack-dev-server": "3.10.3"
+      "webpack-dev-server": "4.0.0"
     },
     "hash": "eb750a6e959b44474fd5d40f68c6362477a13f98114b57f67a40a78fa7efcdd1"
   },
