@@ -49,7 +49,7 @@
       "webpack": "4.42.0",
       "chokidar": "^3.4.0",
       "webpack-merge": "4.2.2",
-      "webpack-dev-server": "3.10.3"
+      "webpack-dev-server": "3.11.3"
     },
     "hash": "eb750a6e959b44474fd5d40f68c6362477a13f98114b57f67a40a78fa7efcdd1"
   },
